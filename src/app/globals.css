@@ -1,26 +1,250 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Fondamento&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #faf7f0;
+  --foreground: #2d3748;
+
+  --primary: #7c4dff;
+  --primary-foreground: #ffffff;
+
+  --secondary: #4e7a51;
+  --secondary-foreground: #ffffff;
+
+  --accent: #9c6644;
+  --accent-foreground: #ffffff;
+
+  --muted: #e6e0d4;
+  --muted-foreground: #4a5568;
+
+  --card: #ffffff;
+  --card-foreground: #2d3748;
+
+  --popover: #ffffff;
+  --popover-foreground: #2d3748;
+
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+
+  --destructive: #e53e3e;
+  --destructive-foreground: #ffffff;
+
+  --ring: #7c4dff;
+  
+  --font-medieval: 'Cinzel', serif;
+  --font-medieval-text: 'Fondamento', cursive;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+.dark {
+  --background: #1a202c;
+  --foreground: #f7fafc;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --primary: #9f7aea;
+  --primary-foreground: #1a202c;
+
+  --secondary: #68d391;
+  --secondary-foreground: #1a202c;
+
+  --accent: #d69e2e;
+  --accent-foreground: #1a202c;
+
+  --muted: #2d3748;
+  --muted-foreground: #e2e8f0;
+
+  --card: #2d3748;
+  --card-foreground: #f7fafc;
+
+  --popover: #2d3748;
+  --popover-foreground: #f7fafc;
+
+  --border: #4a5568;
+  --input: #4a5568;
+
+  --destructive: #f56565;
+  --destructive-foreground: #1a202c;
+
+  --ring: #9f7aea;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background-image: url('/images/medieval-texture.png');
+  background-repeat: repeat;
+  background-attachment: fixed;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(250, 247, 240, 0.9), rgba(250, 247, 240, 0.7));
+  z-index: -1;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Modern medieval styles */
+.medieval-card {
+  @apply border-2 rounded-xl shadow-md backdrop-blur-sm;
+  border-color: rgba(124, 77, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 14px rgba(124, 77, 255, 0.1);
+  position: relative;
+}
+
+.medieval-card::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, transparent 50%, rgba(124, 77, 255, 0.1) 50%);
+  border-radius: 0.8rem;
+  z-index: -1;
+}
+
+.medieval-button {
+  @apply text-primary-foreground font-medium;
+  font-family: var(--font-medieval);
+  background-image: linear-gradient(to right, var(--primary), rgba(124, 77, 255, 0.8));
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  letter-spacing: 0.05em;
+}
+
+.medieval-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+}
+
+.medieval-button:hover::after {
+  transform: translateX(100%);
+  transition: all 0.5s ease;
+}
+
+.medieval-heading {
+  @apply font-bold text-3xl md:text-4xl leading-tight text-foreground;
+  font-family: var(--font-medieval);
+  position: relative;
+  display: inline-block;
+}
+
+.medieval-heading::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, rgba(124, 77, 255, 0.8), transparent);
+}
+
+.medieval-section {
+  @apply border-b py-12;
+  border-color: rgba(226, 232, 240, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.medieval-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background: linear-gradient(90deg, 
+    transparent 0%, transparent 25%, 
+    rgba(124, 77, 255, 0.2) 25%, rgba(124, 77, 255, 0.2) 50%, 
+    transparent 50%, transparent 75%, 
+    rgba(78, 122, 81, 0.2) 75%, rgba(78, 122, 81, 0.2) 100%);
+  background-size: 40px 8px;
+}
+
+/* Medieval divider */
+.medieval-divider {
+  height: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%239C92AC' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+  margin: 20px 0;
+}
+
+/* Medieval scrollbar */
+::-webkit-scrollbar {
+  width: 14px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(226, 232, 240, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--primary), rgba(124, 77, 255, 0.6));
+  border-radius: 7px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, var(--primary), rgba(124, 77, 255, 0.8));
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+/* Medieval quote style */
+.medieval-quote {
+  @apply italic relative px-10 py-4 text-lg;
+  font-family: var(--font-medieval-text);
+  background-color: rgba(124, 77, 255, 0.05);
+  border-left: 4px solid var(--primary);
+}
+
+.medieval-quote::before, 
+.medieval-quote::after {
+  content: '"';
+  font-family: serif;
+  font-size: 3rem;
+  position: absolute;
+  color: rgba(124, 77, 255, 0.4);
+}
+
+.medieval-quote::before {
+  left: 5px;
+  top: -5px;
+}
+
+.medieval-quote::after {
+  right: 5px;
+  bottom: -25px;
+}
+
+/* Medieval badge style */
+.medieval-badge {
+  @apply px-2 py-1 rounded-md text-xs font-medium;
+  background: linear-gradient(135deg, var(--primary), rgba(124, 77, 255, 0.7));
+  color: var(--primary-foreground);
+  box-shadow: 0 1px 3px rgba(124, 77, 255, 0.3);
 }
