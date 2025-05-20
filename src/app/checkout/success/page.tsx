@@ -2,15 +2,12 @@
 
 import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Container from "@/components/Container";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ShoppingBag, Home, ArrowRight } from "lucide-react";
 
 export default function CheckoutSuccess() {
-  const router = useRouter();
-  
   // Generate a random order number
   const orderNumber = `ECO-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
   
@@ -40,7 +37,7 @@ export default function CheckoutSuccess() {
                 Eco Impact
               </p>
               <p className="text-sm text-muted-foreground">
-                By purchasing eco-friendly products, you've contributed to environmental sustainability. You've earned eco coins for your purchase!
+                By purchasing eco-friendly products, you&apos;ve contributed to environmental sustainability. You&apos;ve earned eco coins for your purchase!
               </p>
             </div>
           </CardContent>

@@ -46,7 +46,7 @@ export default function QuestsPage() {
     
     // Simulate quest completion
     setTimeout(() => {
-      completeQuest(questId);
+      completeQuest(questId.toString());
       setQuestCompleted(null);
     }, 1500);
   };
@@ -62,7 +62,7 @@ export default function QuestsPage() {
     
     // Simulate quest starting
     setTimeout(() => {
-      startQuest(questId);
+      startQuest(questId.toString());
       setQuestStarted(null);
     }, 1000);
   };
@@ -156,18 +156,20 @@ export default function QuestsPage() {
                       <CardFooter>
                         <Button 
                           className="medieval-button rounded-md w-full"
-                          disabled={questCompleted === quest.id || 
-                            (quest.requiredAmount && 
-                             (quest.currentAmount || 0) < quest.requiredAmount)}
-                          onClick={() => handleCompleteQuest(quest.id)}
+                          disabled={
+                            questCompleted === Number(quest.id) || 
+                            (quest.requiredAmount !== undefined && 
+                             ((quest.currentAmount ?? 0) < quest.requiredAmount))
+                          }
+                          onClick={() => handleCompleteQuest(Number(quest.id))}
                         >
-                          {questCompleted === quest.id ? (
+                          {questCompleted === Number(quest.id) ? (
                             <>
                               <CheckCircle className="mr-2 h-4 w-4 animate-pulse" />
                               Completing...
                             </>
-                          ) : quest.requiredAmount && 
-                             (quest.currentAmount || 0) < quest.requiredAmount ? (
+                          ) : quest.requiredAmount !== undefined && 
+                             ((quest.currentAmount ?? 0) < quest.requiredAmount) ? (
                             "In Progress"
                           ) : (
                             "Complete Quest"
@@ -181,9 +183,7 @@ export default function QuestsPage() {
                     <Card className="medieval-card p-8 text-center">
                       <AlertCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                       <h3 className="text-lg font-medium mb-2">No Active Quests</h3>
-                      <p className="text-muted-foreground mb-6">
-                        You don't have any active quests right now. Start a new quest to earn eco coins!
-                      </p>
+                                            <p className="text-muted-foreground mb-6">                        You don&apos;t have any active quests right now. Start a new quest to earn eco coins!                      </p>
                       <Button 
                         className="medieval-button rounded-md inline-flex"
                         onClick={() => router.push("#available")}
@@ -238,10 +238,10 @@ export default function QuestsPage() {
                         <CardFooter>
                           <Button 
                             className="medieval-button rounded-md w-full"
-                            disabled={questStarted === quest.id}
-                            onClick={() => handleStartQuest(quest.id)}
+                            disabled={questStarted === Number(quest.id)}
+                            onClick={() => handleStartQuest(Number(quest.id))}
                           >
-                            {questStarted === quest.id ? (
+                            {questStarted === Number(quest.id) ? (
                               <>
                                 <CheckCircle className="mr-2 h-4 w-4 animate-pulse" />
                                 Starting...
@@ -322,7 +322,7 @@ export default function QuestsPage() {
                       <Trophy className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                       <h3 className="text-lg font-medium mb-2">No Completed Quests</h3>
                       <p className="text-muted-foreground mb-6">
-                        You haven't completed any quests yet. Complete eco-friendly activities to earn rewards!
+                        You haven&apos;t completed any quests yet. Complete eco-friendly activities to earn rewards!
                       </p>
                       <Button 
                         className="medieval-button rounded-md"

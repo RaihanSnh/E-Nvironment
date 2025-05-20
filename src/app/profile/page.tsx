@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,15 +28,37 @@ export default function ProfilePage() {
   const router = useRouter();
   const { user, isAuthenticated, logout, updateProfile } = useAuth();
   const { userCoins, completedQuests, activeQuests } = useQuests();
-  const [name, setName] = useState(user?.name || "");
-  const [email, setEmail] = useState(user?.email || "");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [topupAmount, setTopupAmount] = useState<string>("10");
   
-  // If not authenticated, redirect to login
+  // Update form values when user data is available
+  useEffect(() => {
+    if (user) {
+      setName(user.name || "");
+      setEmail(user.email || "");
+    }
+  }, [user]);
+  
+  // Handle authentication check
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, router]);
+  
+  // If not authenticated and we're in the first render, return a loading state
   if (!isAuthenticated) {
-    router.push("/login");
-    return null;
+    return (
+      <div className="py-12">
+        <Container>
+          <div className="text-center">
+            <h1 className="medieval-heading mb-4">Loading...</h1>
+          </div>
+        </Container>
+      </div>
+    );
   }
   
   const handleUpdateProfile = () => {
@@ -166,7 +188,7 @@ export default function ProfilePage() {
                     </div>
                     <div className="space-y-1">
                       <p className="text-sm font-medium">Member Since</p>
-                      <p>{user?.createdAt?.toLocaleDateString() || new Date().toLocaleDateString()}</p>
+                      <p>{new Date().toLocaleDateString()}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -329,9 +351,7 @@ export default function ProfilePage() {
                 <div className="text-center py-12">
                   <History className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
                   <h3 className="font-medium text-lg mb-2">No Orders Yet</h3>
-                  <p className="text-muted-foreground mb-4">
-                    You haven't made any purchases yet. Start shopping for eco-friendly products!
-                  </p>
+                                    <p className="text-muted-foreground mb-4">                    You haven&apos;t made any purchases yet. Start shopping for eco-friendly products!                  </p>
                   <Link href="/shop">
                     <Button className="medieval-button rounded-md">
                       Browse Products

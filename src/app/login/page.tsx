@@ -34,7 +34,7 @@ export default function LoginPage() {
     try {
       login(email, password);
       router.push("/profile");
-    } catch (err) {
+    } catch {
       setError("Invalid email or password");
       setLoading(false);
     }
@@ -100,7 +100,7 @@ export default function LoginPage() {
               </form>
               
               <div className="mt-4 text-center text-sm">
-                <span className="text-muted-foreground">Don't have an account?</span>{" "}
+                <span className="text-muted-foreground">Don&apos;t have an account?</span>{" "}
                 <Link href="/register" className="text-primary hover:underline">
                   Sign up
                 </Link>

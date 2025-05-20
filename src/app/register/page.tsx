@@ -50,7 +50,7 @@ export default function RegisterPage() {
     try {
       register(name, email, password);
       router.push("/profile");
-    } catch (err) {
+    } catch {
       setError("Registration failed. Please try again.");
       setLoading(false);
     }
@@ -154,7 +154,7 @@ export default function RegisterPage() {
             <CardFooter className="text-xs text-muted-foreground text-center">
               <div className="medieval-card p-3 bg-primary/10 w-full">
                 <p className="font-medium mb-1">Join our Eco-Community</p>
-                <p>By creating an account, you'll be able to track your environmental impact, earn eco coins, and contribute to a greener future.</p>
+                <p>By creating an account, you&apos;ll be able to track your environmental impact, earn eco coins, and contribute to a greener future.</p>
               </div>
             </CardFooter>
           </Card>

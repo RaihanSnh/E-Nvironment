@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useProducts } from "@/contexts/ProductsContext";
 import Container from "@/components/Container";
@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { formatPrice } from "@/lib/utils";
 import { FilterX, Search, SlidersHorizontal } from "lucide-react";
 
-export default function ShopPage() {
+function ShopPageContent() {
   const searchParams = useSearchParams();
   const { products, categories, loading, filterProducts } = useProducts();
   const [searchQuery, setSearchQuery] = useState("");
@@ -46,7 +46,7 @@ export default function ShopPage() {
     maxPrice: priceRange[1],
     inStock,
     searchQuery,
-    sortBy: sortBy as any,
+    sortBy: sortBy as 'rating' | 'discount' | 'priceHigh' | 'priceLow' | 'stock' | 'reviews' | 'ecoImpact' | undefined,
     ecoMinimum
   });
   
@@ -292,5 +292,24 @@ export default function ShopPage() {
         </div>
       </Container>
     </div>
+  );
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={
+      <div className="py-12">
+        <Container>
+          <h1 className="medieval-heading mb-8 text-center">Loading...</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, index) => (
+              <div key={index} className="medieval-card h-80 animate-pulse" />
+            ))}
+          </div>
+        </Container>
+      </div>
+    }>
+      <ShopPageContent />
+    </Suspense>
   );
 } 

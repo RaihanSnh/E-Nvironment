@@ -9,6 +9,7 @@ interface User {
   balance: number;
   coins: number;
   purchaseHistory: PurchaseRecord[];
+  name?: string;
 }
 
 interface StoredUser extends User {
@@ -41,6 +42,7 @@ interface AuthContextType {
   useCoins: (amount: number) => boolean;
   addBalance: (amount: number) => void;
   addPurchaseRecord: (record: Omit<PurchaseRecord, "id" | "date">) => void;
+  updateProfile: (data: {name?: string; email?: string}) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -189,6 +191,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const updateProfile = (data: {name?: string; email?: string}) => {
+    if (user) {
+      // Update user state
+      setUser({
+        ...user,
+        name: data.name || user.name,
+        email: data.email || user.email
+      });
+
+      // Update users array in localStorage
+      const users = JSON.parse(localStorage.getItem("users") || "[]");
+      const updatedUsers = users.map((u: StoredUser) => {
+        if (u.id === user.id) {
+          return {
+            ...u,
+            name: data.name || user.name,
+            email: data.email || user.email
+          };
+        }
+        return u;
+      });
+
+      localStorage.setItem("users", JSON.stringify(updatedUsers));
+    }
+  };
+
   return (
       <AuthContext.Provider
           value={{
@@ -200,7 +228,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             addCoins,
             useCoins,
             addBalance,
-            addPurchaseRecord
+            addPurchaseRecord,
+            updateProfile
           }}
       >
         {children}

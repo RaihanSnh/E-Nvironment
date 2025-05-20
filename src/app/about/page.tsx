@@ -59,10 +59,10 @@ export default function AboutPage() {
               </h1>
             </div>
             <div className="medieval-quote mb-8">
-              "In this kingdom, we forge technology with nature's wisdom, creating harmony between progress and preservation."
+              &quot;In this kingdom, we forge technology with nature&apos;s wisdom, creating harmony between progress and preservation.&quot;
             </div>
             <p className="text-lg md:text-xl mb-8 text-muted-foreground" style={{ fontFamily: "var(--font-medieval-text)" }}>
-              We craft sustainable IoT enchantments that help individuals and businesses monitor, conserve, and protect our realm's resources. Our quest is to make environmental stewardship accessible to all citizens of the kingdom.
+              We craft sustainable IoT enchantments that help individuals and businesses monitor, conserve, and protect our realm&apos;s resources. Our quest is to make environmental stewardship accessible to all citizens of the kingdom.
             </p>
           </div>
         </Container>
@@ -198,7 +198,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-bold mb-2 text-center" style={{ fontFamily: "var(--font-medieval)" }}>Fellowship</h3>
               <p className="text-muted-foreground text-center" style={{ fontFamily: "var(--font-medieval-text)" }}>
-                We believe in the power of united realms, which is why we've built legendary quests and royal rewards into our covenant.
+                We believe in the power of united realms, which is why we&apos;ve built legendary quests and royal rewards into our covenant.
               </p>
             </div>
             
@@ -208,7 +208,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-xl font-bold mb-2 text-center" style={{ fontFamily: "var(--font-medieval)" }}>Truth</h3>
               <p className="text-muted-foreground text-center" style={{ fontFamily: "var(--font-medieval-text)" }}>
-                We pledge to be forthright about our artifacts' environmental influence and the tangible difference they make in the kingdom.
+                We pledge to be forthright about our artifacts&apos; environmental influence and the tangible difference they make in the kingdom.
               </p>
             </div>
           </div>

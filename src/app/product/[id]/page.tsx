@@ -39,7 +39,7 @@ export default function ProductPage() {
           <div className="medieval-card p-8 text-center">
             <h1 className="medieval-heading mb-4">Product Not Found</h1>
             <p className="text-muted-foreground mb-6">
-              The product you are looking for doesn't exist or has been removed.
+              The product you are looking for doesn&apos;t exist or has been removed.
             </p>
             <Button 
               className="medieval-button rounded-md"

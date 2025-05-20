@@ -103,7 +103,7 @@ export default function CartPage() {
                 The treasure chest awaits to be filled with environmental wonders.
               </p>
               <div className="medieval-quote mb-8">
-                "Every purchase is a step towards a greener kingdom."
+                &quot;Every purchase is a step towards a greener kingdom.&quot;
               </div>
               <Link href="/shop">
                 <Button className="medieval-button rounded-md flex items-center gap-2 px-6 py-3 text-lg">
@@ -352,9 +352,7 @@ export default function CartPage() {
                     </>
                   )}
                 </Button>
-                <p className="text-xs text-muted-foreground text-center mt-2">
-                  By proceeding, you'll earn eco quest rewards and contribute to a greener realm.
-                </p>
+                                <p className="text-xs text-muted-foreground text-center mt-2">                  By proceeding, you&apos;ll earn eco quest rewards and contribute to a greener realm.                </p>
               </CardFooter>
             </Card>
             

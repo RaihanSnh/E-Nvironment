@@ -39,9 +39,7 @@ export default function ContactPage() {
         <h1 className="medieval-heading mb-6 text-center">
           <span className="text-primary">Contact</span> the Guild
         </h1>
-        <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">
-          Send a message to our environmental knights. We'll respond to your queries about our eco-friendly IoT devices and quests.
-        </p>
+                <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-12">          Send a message to our environmental knights. We&apos;ll respond to your queries about our eco-friendly IoT devices and quests.        </p>
         
         <div className="grid md:grid-cols-3 gap-8">
           {/* Contact Information */}
@@ -58,7 +56,7 @@ export default function ContactPage() {
                     const target = e.target as HTMLImageElement;
                     target.style.backgroundColor = "rgba(124, 77, 255, 0.2)";
                     target.style.objectFit = "contain";
-                    target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z'/%3E%3Cpath d='M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4'/%3E%3Cpath d='M12 12h.01'/%3E%3C/svg%3E";
+                    target.src = "data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724%27 height=%2724%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27currentColor%27 stroke-width=%272%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27%3E%3Cpath d=%27M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z%27/%3E%3Cpath d=%27M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4%27/%3E%3Cpath d=%27M12 12h.01%27/%3E%3C/svg%3E";
                   }}
                 />
               </div>
