@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -19,10 +19,8 @@ import {
   Settings, 
   LogOut,
   PlusCircle,
-  ArrowRight,
   Leaf,
-  Recycle,
-  Share
+  Recycle
 } from "lucide-react";
 
 type OrderItem = {
@@ -39,7 +37,7 @@ type Order = {
   total: number;
 };
 
-export default function ProfilePage() {
+function ProfilePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isAuthenticated, logout, updateProfile } = useAuth();
@@ -585,5 +583,13 @@ export default function ProfilePage() {
         </Tabs>
       </Container>
     </div>
+  );
+}
+
+export default function ProfilePage() {
+  return (
+    <Suspense fallback={<div>Loading Profile...</div>}>
+      <ProfilePageContent />
+    </Suspense>
   );
 } 

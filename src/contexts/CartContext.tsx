@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import { Product } from "./ProductsContext";
 
-interface CartItem {
+export interface CartItem {
   product: Product;
   quantity: number;
 }

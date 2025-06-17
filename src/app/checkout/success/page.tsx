@@ -6,7 +6,7 @@ import Container from "@/components/Container";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ShoppingBag, Home, ArrowRight } from "lucide-react";
-import { useCart } from "@/contexts/CartContext";
+import { useCart, CartItem } from "@/contexts/CartContext";
 
 type OrderItem = {
   name: string;
@@ -49,12 +49,12 @@ export default function CheckoutSuccess() {
         id: `ORD-${Math.floor(Math.random() * 10000).toString().padStart(5, '0')}`,
         date: new Date().toISOString(),
         status: 'Processing',
-        items: sourceItems.map((item: any) => ({
-          name: item.product ? item.product.name : item.name,
-          price: item.product ? item.product.price : item.price,
+        items: sourceItems.map((item: CartItem) => ({
+          name: item.product.title,
+          price: item.product.price,
           quantity: item.quantity,
         })),
-        total: cartTotal > 0 ? cartTotal : sourceItems.reduce((sum: number, item: any) => sum + (item.product ? item.product.price : item.price) * item.quantity, 0),
+        total: cartTotal > 0 ? cartTotal : sourceItems.reduce((sum, item: CartItem) => sum + item.product.price * item.quantity, 0),
       };
 
       const storedOrders = localStorage.getItem('orderHistory');
