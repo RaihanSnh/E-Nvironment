@@ -1,15 +1,73 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Container from "@/components/Container";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ShoppingBag, Home, ArrowRight } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+
+type OrderItem = {
+  name: string;
+  quantity: number;
+  price: number;
+};
+
+type Order = {
+  id: string;
+  date: string;
+  status: 'Processing' | 'Delivered' | 'Cancelled';
+  items: OrderItem[];
+  total: number;
+};
 
 export default function CheckoutSuccess() {
-  // Generate a random order number
-  const orderNumber = `ECO-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+  const { items: cartItems, clearCart, totalPrice: cartTotal, isLoading: isCartLoading } = useCart();
+  const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
+  const [orderProcessed, setOrderProcessed] = useState(false);
+
+  useEffect(() => {
+    if (isCartLoading) {
+      return;
+    }
+
+    let sourceItems = cartItems;
+    if ((sourceItems === undefined || sourceItems.length === 0) && !orderProcessed) {
+      const snapshot = localStorage.getItem('lastCheckedOutItems');
+      if (snapshot) {
+        try {
+          sourceItems = JSON.parse(snapshot);
+        } catch (e) {
+          console.error('Failed to parse lastCheckedOutItems', e);
+        }
+      }
+    }
+
+    if (sourceItems && sourceItems.length > 0 && !orderProcessed) {
+      const newOrder: Order = {
+        id: `ORD-${Math.floor(Math.random() * 10000).toString().padStart(5, '0')}`,
+        date: new Date().toISOString(),
+        status: 'Processing',
+        items: sourceItems.map((item: any) => ({
+          name: item.product ? item.product.name : item.name,
+          price: item.product ? item.product.price : item.price,
+          quantity: item.quantity,
+        })),
+        total: cartTotal > 0 ? cartTotal : sourceItems.reduce((sum: number, item: any) => sum + (item.product ? item.product.price : item.price) * item.quantity, 0),
+      };
+
+      const storedOrders = localStorage.getItem('orderHistory');
+      const orders = storedOrders ? JSON.parse(storedOrders) : [];
+      orders.unshift(newOrder);
+      localStorage.setItem('orderHistory', JSON.stringify(orders));
+
+      setConfirmedOrder(newOrder);
+      setOrderProcessed(true);
+      clearCart();
+      localStorage.removeItem('lastCheckedOutItems');
+    }
+  }, [cartItems, orderProcessed, clearCart, cartTotal, isCartLoading]);
   
   return (
     <div className="py-24">
@@ -26,11 +84,13 @@ export default function CheckoutSuccess() {
               Thank you for your purchase. Your order has been confirmed and will be shipped soon.
             </p>
             
-            <div className="medieval-card p-4 mb-6">
-              <h3 className="font-medium mb-1">Order Details</h3>
-              <p className="text-sm text-muted-foreground">Order Number: {orderNumber}</p>
-              <p className="text-sm text-muted-foreground">Date: {new Date().toLocaleDateString()}</p>
-            </div>
+            {confirmedOrder && (
+              <div className="medieval-card p-4 mb-6">
+                <h3 className="font-medium mb-1">Order Details</h3>
+                <p className="text-sm text-muted-foreground">Order Number: {confirmedOrder.id}</p>
+                <p className="text-sm text-muted-foreground">Date: {new Date(confirmedOrder.date).toLocaleDateString()}</p>
+              </div>
+            )}
             
             <div className="medieval-card p-4 bg-primary/10">
               <p className="text-sm font-medium mb-2">
@@ -52,7 +112,7 @@ export default function CheckoutSuccess() {
               </Button>
             </Link>
             
-            <Link href="/profile/orders" className="w-full">
+            <Link href="/profile?tab=orders" className="w-full">
               <Button 
                 variant="outline"
                 className="rounded-md w-full flex items-center justify-center gap-2"

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuests } from "@/contexts/QuestContext";
 import Container from "@/components/Container";
@@ -21,11 +21,27 @@ import {
   PlusCircle,
   ArrowRight,
   Leaf,
-  Recycle 
+  Recycle,
+  Share
 } from "lucide-react";
+
+type OrderItem = {
+  name: string;
+  quantity: number;
+  price: number;
+};
+
+type Order = {
+  id: string;
+  date: string;
+  status: 'Delivered' | 'Processing' | 'Cancelled';
+  items: OrderItem[];
+  total: number;
+};
 
 export default function ProfilePage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, isAuthenticated, logout, updateProfile } = useAuth();
   const { userCoins, completedQuests, activeQuests } = useQuests();
   const [name, setName] = useState("");
@@ -34,6 +50,8 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [topupAmount, setTopupAmount] = useState<string>("10");
 
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'overview');
+  const [orders, setOrders] = useState<Order[]>([]);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -46,6 +64,45 @@ export default function ProfilePage() {
       setEmail(user.email || "");
     }
   }, [user]);
+  
+  useEffect(() => {
+    const newTab = searchParams.get('tab');
+    if (newTab) {
+      setActiveTab(newTab);
+    }
+  }, [searchParams]);
+  
+  useEffect(() => {
+    const loadOrders = () => {
+      const storedOrders = localStorage.getItem('orderHistory');
+      if (storedOrders) {
+        setOrders(JSON.parse(storedOrders));
+      } else {
+        setOrders([]);
+      }
+    };
+
+    // Initial load
+    loadOrders();
+
+    // Reload on window focus
+    const handleFocus = () => loadOrders();
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, []);
+  
+  // Reload orders whenever the active tab switches to 'orders'
+  useEffect(() => {
+    if (activeTab === 'orders') {
+      const storedOrders = localStorage.getItem('orderHistory');
+      if (storedOrders) {
+        setOrders(JSON.parse(storedOrders));
+      }
+    }
+  }, [activeTab]);
   
   // Handle authentication check
   useEffect(() => {
@@ -135,7 +192,7 @@ export default function ProfilePage() {
           </div>
         </div>
         
-        <Tabs defaultValue="overview" className="space-y-4">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
           <TabsList className="grid grid-cols-5 w-full max-w-xl rounded-md">
             <TabsTrigger value="overview" className="rounded-none">
               <User className="h-4 w-4 mr-2" />
@@ -350,20 +407,59 @@ export default function ProfilePage() {
           <TabsContent value="orders">
             <Card className="medieval-card">
               <CardHeader>
-                <CardTitle>Your Orders</CardTitle>
-                <CardDescription>Track your eco-friendly purchases</CardDescription>
+                <CardTitle>Your Order History</CardTitle>
+                <CardDescription>Review your past enchantments and artifacts.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="text-center py-12">
-                  <History className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="font-medium text-lg mb-2">No Orders Yet</h3>
-                                    <p className="text-muted-foreground mb-4">                    You haven&apos;t made any purchases yet. Start shopping for eco-friendly products!                  </p>
-                  <Link href="/shop">
-                    <Button className="medieval-button rounded-md">
-                      Browse Products
-                    </Button>
-                  </Link>
-                </div>
+                {orders.length > 0 ? (
+                  orders.map((order) => (
+                    <div key={order.id} className="medieval-card p-4 bg-background/50">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-bold text-lg" style={{ fontFamily: "var(--font-medieval)" }}>
+                            Order #{order.id.split('-')[1]}
+                          </h4>
+                          <p className="text-sm text-muted-foreground">
+                            Date: {new Date(order.date).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <span 
+                          className={`text-xs font-bold px-2 py-1 rounded-full ${
+                            order.status === 'Delivered' ? 'bg-green-500/20 text-green-300' : 
+                            order.status === 'Processing' ? 'bg-yellow-500/20 text-yellow-300' : 
+                            'bg-red-500/20 text-red-300'
+                          }`}
+                        >
+                          {order.status}
+                        </span>
+                      </div>
+                      <div className="border-t border-border my-3"></div>
+                      <div className="space-y-2">
+                        {order.items.map((item, index) => (
+                          <div key={index} className="flex justify-between text-sm">
+                            <p>{item.name} <span className="text-muted-foreground">x{item.quantity}</span></p>
+                            <p>{item.price * item.quantity} Coins</p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="border-t border-border my-3"></div>
+                      <div className="flex justify-end">
+                        <p className="font-bold text-lg">Total: {order.total} Coins</p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-12">
+                    <History className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="font-medium text-lg mb-2">No Orders Yet</h3>
+                    <p className="text-muted-foreground mb-4">You haven&apos;t made any purchases yet. Start shopping for eco-friendly products!</p>
+                    <Link href="/shop">
+                      <Button className="medieval-button rounded-md">
+                        Browse the Royal Bazaar
+                      </Button>
+                    </Link>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

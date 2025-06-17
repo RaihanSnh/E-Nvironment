@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import { Product } from "./ProductsContext";
 
 interface CartItem {
@@ -16,14 +16,14 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  isLoading: boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [totalItems, setTotalItems] = useState<number>(0);
-  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Load cart from localStorage on initial render
   useEffect(() => {
@@ -36,24 +36,24 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         console.error("Failed to parse cart from localStorage:", error);
       }
     }
+    setIsLoading(false);
   }, []);
 
   // Update localStorage when cart changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(items));
-    
-    // Calculate totals
-    const itemCount = items.reduce((total, item) => total + item.quantity, 0);
-    const price = items.reduce((total, item) => {
-      const discountedPrice = item.product.price * (1 - item.product.discountPercentage / 100);
-      return total + (discountedPrice * item.quantity);
-    }, 0);
-    
-    setTotalItems(itemCount);
-    setTotalPrice(price);
   }, [items]);
 
-  const addToCart = (product: Product, quantity: number = 1) => {
+  const { totalItems, totalPrice } = useMemo(() => {
+    const itemCount = items.reduce((total, item) => total + item.quantity, 0);
+    const price = items.reduce((total, item) => {
+      const discountedPrice = item.product.price * (1 - (item.product.discountPercentage || 0) / 100);
+      return total + (discountedPrice * item.quantity);
+    }, 0);
+    return { totalItems: itemCount, totalPrice: price };
+  }, [items]);
+
+  const addToCart = useCallback((product: Product, quantity: number = 1) => {
     setItems(prevItems => {
       // Check if product already exists in cart
       const existingItemIndex = prevItems.findIndex(item => item.product.id === product.id);
@@ -71,13 +71,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return [...prevItems, { product, quantity }];
       }
     });
-  };
+  }, []);
 
-  const removeFromCart = (productId: number) => {
+  const removeFromCart = useCallback((productId: number) => {
     setItems(prevItems => prevItems.filter(item => item.product.id !== productId));
-  };
+  }, []);
 
-  const updateQuantity = (productId: number, quantity: number) => {
+  const updateQuantity = useCallback((productId: number, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
@@ -90,11 +90,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           : item
       )
     );
-  };
+  }, [removeFromCart]);
 
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
+    // Preserve a snapshot of the items being checked out so the success page can process them
+    localStorage.setItem("lastCheckedOutItems", JSON.stringify(items));
     setItems([]);
-  };
+  }, [items]);
 
   return (
     <CartContext.Provider 
@@ -105,7 +107,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         updateQuantity, 
         clearCart, 
         totalItems, 
-        totalPrice 
+        totalPrice,
+        isLoading
       }}
     >
       {children}
