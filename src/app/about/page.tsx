@@ -89,10 +89,10 @@ export default function AboutPage() {
                 </p>
               </div>
             </div>
-            <div className="medieval-card overflow-hidden h-80 relative">
+            <div className="medieval-card overflow-hidden h-80 relative rounded-lg">
               <Image
-                src="/images/team-meeting.jpg"
-                alt="Council meeting discussing environmental solutions"
+                src="/images/castle-banner.jpg"
+                alt="A grand castle representing the guild's long history"
                 fill
                 className="object-cover"
               />

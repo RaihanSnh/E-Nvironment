@@ -31,7 +31,14 @@ export default function ProfilePage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [topupAmount, setTopupAmount] = useState<string>("10");
+
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordLoading, setPasswordLoading] = useState(false);
   
   useEffect(() => {
     if (user) {
@@ -67,6 +74,7 @@ export default function ProfilePage() {
     
     setTimeout(() => {
       setLoading(false);
+      setIsEditing(false);
     }, 500);
   };
   
@@ -78,6 +86,26 @@ export default function ProfilePage() {
   const handleTopup = () => {
     alert(`Successfully topped up Rp. ${parseInt(topupAmount) * 10000}`);
   };
+
+  const handleChangePassword = () => {
+    setPasswordLoading(true);
+    console.log({ currentPassword, newPassword, confirmPassword });
+
+    if(newPassword !== confirmPassword) {
+      alert("New passwords do not match!");
+      setPasswordLoading(false);
+      return;
+    }
+
+    setTimeout(() => {
+      setPasswordLoading(false);
+      setIsEditingPassword(false);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      alert("Password changed successfully!");
+    }, 1000);
+  }
   
   return (
     <div className="py-12">
@@ -174,68 +202,49 @@ export default function ProfilePage() {
                   <CardDescription>Your personal information</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium">Name</p>
-                      <p>{user?.name}</p>
+                  {!isEditing ? (
+                    <div className="space-y-4">
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-muted-foreground">Name</p>
+                        <p className="text-lg">{user?.name}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-muted-foreground">Email</p>
+                        <p className="text-lg">{user?.email}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-sm font-medium text-muted-foreground">Member Since</p>
+                        <p className="text-lg">{new Date().toLocaleDateString()}</p>
+                      </div>
                     </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium">Email</p>
-                      <p>{user?.email}</p>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium">Member Since</p>
-                      <p>{new Date().toLocaleDateString()}</p>
-                    </div>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Button 
-                    variant="outline" 
-                    className="w-full rounded-md"
-                    onClick={() => router.push("/profile/settings")}
-                  >
-                    Edit Profile
-                  </Button>
-                </CardFooter>
-              </Card>
-              
-              <Card className="medieval-card lg:col-span-1">
-                <CardHeader>
-                  <CardTitle>Recent Activities</CardTitle>
-                  <CardDescription>Your latest eco actions</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {completedQuests.slice(0, 3).map((quest, index) => (
-                    <div key={index} className="flex items-start gap-4 py-2 border-b border-border last:border-0">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        {quest.type === 'recycle' && <Recycle className="h-4 w-4 text-primary" />}
-                        {quest.type === 'dispose' && <Leaf className="h-4 w-4 text-secondary" />}
+                  ) : (
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="name">Name</Label>
+                        <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="mt-1" />
                       </div>
                       <div>
-                        <p className="font-medium">{quest.title}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date().toLocaleDateString()} • {quest.coinReward} coins
-                        </p>
+                        <Label htmlFor="email">Email</Label>
+                        <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1" />
                       </div>
-                    </div>
-                  ))}
-                  
-                  {completedQuests.length === 0 && (
-                    <div className="text-center py-6">
-                      <p className="text-muted-foreground">No activities yet</p>
                     </div>
                   )}
                 </CardContent>
-                <CardFooter>
-                  <Button 
-                    variant="outline" 
-                    className="w-full rounded-md flex items-center justify-center gap-2"
-                    onClick={() => router.push("/profile/activities")}
-                  >
-                    <ArrowRight className="h-4 w-4" />
-                    View All Activities
-                  </Button>
+                <CardFooter className="flex gap-2">
+                  {isEditing ? (
+                    <>
+                      <Button onClick={handleUpdateProfile} className="w-full medieval-button" disabled={loading}>
+                        {loading ? 'Saving...' : 'Save Changes'}
+                      </Button>
+                      <Button variant="outline" onClick={() => setIsEditing(false)} className="w-full">
+                        Cancel
+                      </Button>
+                    </>
+                  ) : (
+                    <Button variant="outline" className="w-full" onClick={() => setIsEditing(true)}>
+                      Edit Profile
+                    </Button>
+                  )}
                 </CardFooter>
               </Card>
             </div>
@@ -416,67 +425,64 @@ export default function ProfilePage() {
           <TabsContent value="settings">
             <Card className="medieval-card">
               <CardHeader>
-                <CardTitle>Account Settings</CardTitle>
-                <CardDescription>Update your personal information</CardDescription>
+                <CardTitle>Security Settings</CardTitle>
+                <CardDescription>Manage your password</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="current-password">Current Password</Label>
                   <Input
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="rounded-md"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="rounded-md"
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
+                    id="current-password"
                     type="password"
                     placeholder="••••••••"
-                    disabled
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    disabled={!isEditingPassword}
                     className="rounded-md"
                   />
-                  <div className="text-right">
-                    <Button 
-                      variant="link" 
-                      className="text-primary h-auto p-0"
-                      onClick={() => router.push("/profile/change-password")}
-                    >
-                      Change Password
-                    </Button>
-                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="new-password">New Password</Label>
+                  <Input
+                    id="new-password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    disabled={!isEditingPassword}
+                    className="rounded-md"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirm-password">Confirm New Password</Label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    disabled={!isEditingPassword}
+                    className="rounded-md"
+                  />
                 </div>
               </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button 
-                  variant="outline"
-                  className="rounded-md"
-                  onClick={handleLogout}
-                >
-                  Sign Out
-                </Button>
-                
-                <Button 
-                  className="medieval-button rounded-md"
-                  onClick={handleUpdateProfile}
-                  disabled={loading}
-                >
-                  {loading ? "Updating..." : "Save Changes"}
-                </Button>
+              <CardFooter>
+                {isEditingPassword ? (
+                  <div className="flex gap-2 w-full">
+                    <Button onClick={handleChangePassword} className="w-full medieval-button" disabled={passwordLoading}>
+                      {passwordLoading ? 'Saving...' : 'Save Password'}
+                    </Button>
+                    <Button variant="outline" onClick={() => setIsEditingPassword(false)} className="w-full">
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <Button variant="outline" className="w-full" onClick={() => setIsEditingPassword(true)}>
+                    Change Password
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           </TabsContent>
