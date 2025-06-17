@@ -53,13 +53,11 @@ export default function ProductPage() {
     );
   }
   
-  // Calculate discounted price
   const discountedPrice = calculateDiscountedPrice(
     product.price,
     product.discountPercentage
   );
   
-  // Generate eco impact color based on the score
   const getEcoImpactColor = (impact: number = 0) => {
     if (impact >= 8) return "text-green-500";
     if (impact >= 5) return "text-amber-500";

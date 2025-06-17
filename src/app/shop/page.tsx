@@ -28,7 +28,6 @@ function ShopPageContent() {
   const [showFilters, setShowFilters] = useState(false);
   const [ecoMinimum, setEcoMinimum] = useState(0);
   
-  // Calculate price range based on products
   useEffect(() => {
     if (products.length > 0) {
       const prices = products.map(p => p.price);
@@ -38,7 +37,6 @@ function ShopPageContent() {
     }
   }, [products]);
   
-  // Filter products based on current filters
   const filteredProducts = filterProducts({
     category: selectedCategory,
     minRating,
@@ -50,7 +48,6 @@ function ShopPageContent() {
     ecoMinimum
   });
   
-  // Reset all filters
   const resetFilters = () => {
     setSelectedCategory(undefined);
     setMinRating(0);

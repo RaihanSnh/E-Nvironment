@@ -46,29 +46,30 @@ const FeaturedProducts = () => {
   return (
     <div className="medieval-section">
       <Container className="py-12">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <h2 className="medieval-heading mb-4 md:mb-0">
-            Featured <span className="text-primary">Environmental</span> Solutions
-          </h2>
-          <Link href="/shop">
-            <Button variant="outline" className="rounded-md flex items-center gap-2">
-              Browse All Products
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-        
-        <div className="mt-12 text-center">
-          <p className="text-muted-foreground mb-4 max-w-2xl mx-auto">
-            Our featured products are selected based on their environmental impact score, 
-            helping you make more sustainable choices for a greener future.
-          </p>
+        <div className="scroll-container">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <h2 className="medieval-heading mb-4 md:mb-0">
+              From the Royal Armoury
+            </h2>
+            <Link href="/shop">
+              <Button variant="outline" className="rounded-md flex items-center gap-2 medieval-button">
+                View All Wares
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          
+          <div className="mt-12 text-center">
+            <p className="medieval-quote max-w-2xl mx-auto">
+              Hark, traveller! These legendary artifacts are our finest, forged to aid thee on thy noble quests.
+            </p>
+          </div>
         </div>
       </Container>
     </div>

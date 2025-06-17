@@ -5,68 +5,70 @@
 @tailwind utilities;
 
 :root {
-  --background: #faf7f0;
-  --foreground: #2d3748;
+  --background: #fdf6e3; /* Parchment Paper */
+  --foreground: #3a3a3a; /* Dark Slate Gray */
 
-  --primary: #7c4dff;
-  --primary-foreground: #ffffff;
+  --primary: #8a0303; /* Noble Red */
+  --primary-foreground: #fdf6e3; /* Parchment Paper */
 
-  --secondary: #4e7a51;
-  --secondary-foreground: #ffffff;
+  --secondary: #4a5568; /* Steel Gray */
+  --secondary-foreground: #fdf6e3; /* Parchment Paper */
 
-  --accent: #9c6644;
-  --accent-foreground: #ffffff;
+  --accent: #c89c4ca4; /* Weathered Gold */
+  --accent-foreground: #3a3a3a; /* Dark Slate Gray */
 
-  --muted: #e6e0d4;
-  --muted-foreground: #4a5568;
+  --muted: #d4c8b0; /* Faded Parchment */
+  --muted-foreground: #4a5568; /* Steel Gray */
 
-  --card: #ffffff;
-  --card-foreground: #2d3748;
+  --card: rgba(253, 246, 227, 0.8); /* Semi-transparent Parchment */
+  --card-foreground: #3a3a3a; /* Dark Slate Gray */
 
-  --popover: #ffffff;
-  --popover-foreground: #2d3748;
+  --popover: rgba(253, 246, 227, 0.95); /* Opaque Parchment */
+  --popover-foreground: #3a3a3a; /* Dark Slate Gray */
 
-  --border: #e2e8f0;
-  --input: #e2e8f0;
+  --border: #c8bca7; /* Aged Paper Edge */
+  --input: #e6e0d4; /* Light Parchment */
 
-  --destructive: #e53e3e;
-  --destructive-foreground: #ffffff;
+  --destructive: #b91c1c; /* Danger Red */
+  --destructive-foreground: #fdf6e3; /* Parchment Paper */
 
-  --ring: #7c4dff;
+  --ring: #c89c4c; /* Gold Ring */
+  --stone: #d1c8b8; /* Light Hewn Stone */
   
   --font-medieval: 'Cinzel', serif;
   --font-medieval-text: 'Fondamento', cursive;
 }
 
 .dark {
-  --background: #1a202c;
-  --foreground: #f7fafc;
+  --background: #1c1814; /* Soot Black */
+  --foreground: #e0ddd7; /* Chalk White */
 
-  --primary: #9f7aea;
-  --primary-foreground: #1a202c;
+  --primary: #c74c4c; /* Worn Noble Red */
+  --primary-foreground: #f0e9d6; /* Light Parchment */
 
-  --secondary: #68d391;
-  --secondary-foreground: #1a202c;
+  --secondary: #718096; /* Lighter Steel Gray */
+  --secondary-foreground: #f0e9d6; /* Light Parchment */
 
-  --accent: #d69e2e;
-  --accent-foreground: #1a202c;
+  --accent: #e6b357; /* Glowing Gold */
+  --accent-foreground: #f0e9d6; /* Light Parchment text on Gold */
 
-  --muted: #2d3748;
-  --muted-foreground: #e2e8f0;
+  --muted: #2d3748; /* Dark Slate */
+  --muted-foreground: #a0aec0; /* Light Gray */
 
-  --card: #2d3748;
-  --card-foreground: #f7fafc;
+  --card: rgba(28, 24, 20, 0.8); /* Semi-transparent Soot */
+  --card-foreground: #e0ddd7; /* Chalk White */
 
-  --popover: #2d3748;
-  --popover-foreground: #f7fafc;
+  --popover: rgba(28, 24, 20, 0.95); /* Opaque Soot */
+  --popover-foreground: #e0ddd7; /* Chalk White */
 
-  --border: #4a5568;
-  --input: #4a5568;
+  --border: #4a5568; /* Visible Steel Border */
+  --input: #2d3748; /* Dark Slate Input */
 
-  --destructive: #f56565;
-  --destructive-foreground: #1a202c;
+  --destructive: #ef4444; /* Bright Danger Red */
+  --destructive-foreground: #1c1814; /* Soot Black */
 
-  --ring: #9f7aea;
+  --ring: #e6b357; /* Glowing Gold Ring */
+  --stone: #2a2622; /* Dark Hewn Stone */
 }
 
 body {
@@ -90,6 +92,10 @@ body::before {
   z-index: -1;
 }
 
+.dark body::before {
+  background: linear-gradient(to bottom, rgba(28, 24, 20, 0.9), rgba(28, 24, 20, 0.7));
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -102,9 +108,9 @@ body::before {
 /* Modern medieval styles */
 .medieval-card {
   @apply border-2 rounded-xl shadow-md backdrop-blur-sm;
-  border-color: rgba(124, 77, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4px 14px rgba(124, 77, 255, 0.1);
+  border-color: var(--border);
+  background-color: var(--stone);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
   position: relative;
 }
 
@@ -123,11 +129,12 @@ body::before {
 .medieval-button {
   @apply text-primary-foreground font-medium;
   font-family: var(--font-medieval);
-  background-image: linear-gradient(to right, var(--primary), rgba(124, 77, 255, 0.8));
+  background-image: linear-gradient(to right, var(--primary), color-mix(in srgb, var(--primary) 80%, black));
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
   letter-spacing: 0.05em;
+  border: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
 }
 
 .medieval-button::after {
@@ -160,7 +167,7 @@ body::before {
   bottom: -6px;
   width: 100%;
   height: 2px;
-  background: linear-gradient(to right, rgba(124, 77, 255, 0.8), transparent);
+  background: linear-gradient(to right, var(--accent), transparent);
 }
 
 .medieval-section {
@@ -218,8 +225,8 @@ body::before {
 .medieval-quote {
   @apply italic relative px-10 py-4 text-lg;
   font-family: var(--font-medieval-text);
-  background-color: rgba(124, 77, 255, 0.05);
-  border-left: 4px solid var(--primary);
+  background-color: color-mix(in srgb, var(--accent) 10%, transparent);
+  border-left: 4px solid var(--accent);
 }
 
 .medieval-quote::before, 
@@ -228,7 +235,7 @@ body::before {
   font-family: serif;
   font-size: 3rem;
   position: absolute;
-  color: rgba(124, 77, 255, 0.4);
+  color: color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 .medieval-quote::before {
@@ -244,7 +251,31 @@ body::before {
 /* Medieval badge style */
 .medieval-badge {
   @apply px-2 py-1 rounded-md text-xs font-medium;
-  background: linear-gradient(135deg, var(--primary), rgba(124, 77, 255, 0.7));
-  color: var(--primary-foreground);
-  box-shadow: 0 1px 3px rgba(124, 77, 255, 0.3);
+  background: linear-gradient(135deg, var(--secondary), color-mix(in srgb, var(--secondary) 70%, black));
+  color: var(--secondary-foreground);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* New Scroll Container */
+.scroll-container {
+  @apply relative p-8 bg-background shadow-lg rounded-lg;
+  background-image: url('/images/medieval-texture.png');
+  border: 1px solid var(--border);
+  border-left: 10px solid var(--secondary);
+  border-right: 10px solid var(--secondary);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3), 
+              inset 5px 0 15px rgba(0,0,0,0.2), 
+              inset -5px 0 15px rgba(0,0,0,0.2);
+}
+
+/* Torchlight Flicker Animation */
+.torch-flicker {
+  animation: flicker 3s linear infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { text-shadow: 0 0 5px var(--accent), 0 0 10px var(--accent), 0 0 15px #ff8c00, 0 0 20px #ff8c00; }
+  25% { text-shadow: 0 0 8px var(--accent), 0 0 12px #ff8c00, 0 0 18px #ff8c00, 0 0 25px #ff8c00; }
+  50% { text-shadow: 0 0 5px var(--accent), 0 0 8px #ff8c00, 0 0 12px #ff8c00, 0 0 18px #ff8c00; }
+  75% { text-shadow: 0 0 10px var(--accent), 0 0 15px #ff8c00, 0 0 20px var(--accent), 0 0 28px #ff8c00; }
 }

@@ -23,7 +23,6 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
     
-    // Simple validation
     if (!email || !password) {
       setError("Please fill in all fields");
       setLoading(false);

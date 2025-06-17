@@ -33,7 +33,6 @@ export default function ProfilePage() {
   const [loading, setLoading] = useState(false);
   const [topupAmount, setTopupAmount] = useState<string>("10");
   
-  // Update form values when user data is available
   useEffect(() => {
     if (user) {
       setName(user.name || "");
@@ -64,7 +63,6 @@ export default function ProfilePage() {
   const handleUpdateProfile = () => {
     setLoading(true);
     
-    // Call the update profile function
     updateProfile({ name, email });
     
     setTimeout(() => {
@@ -77,7 +75,6 @@ export default function ProfilePage() {
     router.push("/");
   };
   
-  // Handle top-up functionality
   const handleTopup = () => {
     alert(`Successfully topped up Rp. ${parseInt(topupAmount) * 10000}`);
   };
